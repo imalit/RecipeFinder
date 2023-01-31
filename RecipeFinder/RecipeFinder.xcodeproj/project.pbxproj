@@ -14,6 +14,7 @@
 		E0A48C5829895BC70055B2E2 /* RecipeFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A48C5729895BC70055B2E2 /* RecipeFinderTests.swift */; };
 		E0A48C6229895BC70055B2E2 /* RecipeFinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A48C6129895BC70055B2E2 /* RecipeFinderUITests.swift */; };
 		E0A48C6429895BC70055B2E2 /* RecipeFinderUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A48C6329895BC70055B2E2 /* RecipeFinderUITestsLaunchTests.swift */; };
+		E0A48C7229896BEA0055B2E2 /* CustomTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0A48C7129896BEA0055B2E2 /* CustomTabBarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		E0A48C5D29895BC70055B2E2 /* RecipeFinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecipeFinderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0A48C6129895BC70055B2E2 /* RecipeFinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFinderUITests.swift; sourceTree = "<group>"; };
 		E0A48C6329895BC70055B2E2 /* RecipeFinderUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeFinderUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E0A48C7129896BEA0055B2E2 /* CustomTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 		E0A48C4529895BC50055B2E2 /* RecipeFinder */ = {
 			isa = PBXGroup;
 			children = (
+				E0A48C7029896BCD0055B2E2 /* CustomTabBarModule */,
 				E0A48C4629895BC50055B2E2 /* RecipeFinderApp.swift */,
 				E0A48C4829895BC50055B2E2 /* ContentView.swift */,
 				E0A48C4A29895BC70055B2E2 /* Assets.xcassets */,
@@ -125,6 +128,14 @@
 				E0A48C6329895BC70055B2E2 /* RecipeFinderUITestsLaunchTests.swift */,
 			);
 			path = RecipeFinderUITests;
+			sourceTree = "<group>";
+		};
+		E0A48C7029896BCD0055B2E2 /* CustomTabBarModule */ = {
+			isa = PBXGroup;
+			children = (
+				E0A48C7129896BEA0055B2E2 /* CustomTabBarView.swift */,
+			);
+			path = CustomTabBarModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,6 +268,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E0A48C7229896BEA0055B2E2 /* CustomTabBarView.swift in Sources */,
 				E0A48C4929895BC50055B2E2 /* ContentView.swift in Sources */,
 				E0A48C4729895BC50055B2E2 /* RecipeFinderApp.swift in Sources */,
 			);

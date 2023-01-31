@@ -9,13 +9,19 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        List {
+            ForEach(0..<10) { i in
+                Text("\(i)")
+            }
+        }.safeAreaInset(edge: .bottom) {
+            VStack {
+                CustomTabBarView()
+                    .foregroundColor(.red)
+                    .frame(maxWidth: .infinity, maxHeight: 0)
+                    .padding([.bottom], 30)
+                    .background(.red)
+            }
         }
-        .padding()
     }
 }
 
