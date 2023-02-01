@@ -7,18 +7,27 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct ContainerView: View {
+    
+    @State private var selectedTab = 1
+    
     var body: some View {
-        List {
-            ForEach(0..<10) { i in
-                Text("\(i)")
+        
+        VStack {
+            if selectedTab == 0 {
+                FoodPairView()
+            } else if selectedTab == 1 {
+                SearchView()
+            } else if selectedTab == 2 {
+                InfoView()
             }
+            Spacer()
         }.safeAreaInset(edge: .bottom) {
             VStack {
-                CustomTabBarView()
+                CustomTabBarView(selectedIndex: $selectedTab)
                     .foregroundColor(.red)
                     .frame(maxWidth: .infinity, maxHeight: 0)
-                    .padding([.bottom], 30)
+                    .padding([.bottom], 50)
                     .background(.red)
             }
         }
@@ -27,6 +36,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContainerView()
     }
 }
