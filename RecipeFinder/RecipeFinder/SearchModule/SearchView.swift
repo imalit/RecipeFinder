@@ -6,41 +6,32 @@
 //
 
 import SwiftUI
-import Combine
 
-class SearchViewModel: ObservableObject {
-    var cancellable: AnyCancellable?
+struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     
-    func fetchRecipes() {
-        cancellable = RecipesServiceImp().fetchRecipes(
-            urlString: Constants.RecipeService.randomRecipes
-        )
-        .print("fetching:")
-        .sink(receiveCompletion: { _ in }, receiveValue: { recipes in
-            var recipeList = recipes.results ?? []
-            var resultsList = recipes.results ?? []
-            
-            resultsList.append(contentsOf: recipeList)
-            
-            for recipe in resultsList {
-                print(recipe)
-            }
-        })
-    }
-}
-
-struct SearchView: View {
-    
-    @StateObject var searchVM = SearchViewModel()
+    @StateObject var searchVM: ViewModel
     
     @State var textInput: String = ""
     @State var isPresented = false
     
     var body: some View {
-        List {
-            TextField("Search", text: $textInput)
-            ForEach(0..<10) { i in
-                Text("\(i)")
+        VStack {
+            Text("Recipe Feed")
+                .font(.headline)
+                .frame(width: 500, height: 50)
+                .background(.red)
+                .foregroundColor(.white)
+            List(searchVM.recipes) { recipe in
+                let recipeCellVM = RecipeCellViewModelImp(
+                    title: recipe.title,
+                    image: recipe.image
+                )
+                RecipeCellView(viewModel: recipeCellVM)
+                    .padding([.leading], 15)
+                    .padding([.top, .bottom], 2)
+                    .background(Color.red)
+                    .cornerRadius(5)
+                    .listRowSeparator(.hidden)
                     .onTapGesture {
                         isPresented = true
                     }
@@ -48,15 +39,17 @@ struct SearchView: View {
             .sheet(isPresented: $isPresented, content: {
                 RecipeView()
             })
-        }.onAppear {
-            searchVM.fetchRecipes()
+            .listStyle(.plain)
         }
-        
+        .onAppear {
+            searchVM.fetchRecipes(searchTerms: nil)
+        }
     }
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView()
+        let searchVM = SearchViewModelImp()
+        SearchView(searchVM: searchVM)
     }
 }

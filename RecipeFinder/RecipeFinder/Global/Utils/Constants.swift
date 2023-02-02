@@ -9,7 +9,8 @@ import Foundation
 
 enum Constants {
     enum RecipeService {
-        static let findByIngredient = "https://api.spoonacular.com/recipes/findByIngredients"
-        static let randomRecipes = "https://api.spoonacular.com/recipes/random?apiKey=ec3fbdd6616044f6bdda5f523abd9eeb"
+        static let complex = "https://api.spoonacular.com/recipes/complexSearch"
+        static let random = "https://api.spoonacular.com/recipes/random"
+        static let apiKey = "apiKey=ec3fbdd6616044f6bdda5f523abd9eeb"
     }
 }

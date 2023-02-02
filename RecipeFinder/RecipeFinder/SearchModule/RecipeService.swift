@@ -13,7 +13,7 @@ struct Recipes: Codable {
     var results: [Recipe]?
 }
 
-struct Recipe: Codable {
+struct Recipe: Codable, Identifiable {
     var id: Int
     var title: String
     var image: String
@@ -34,7 +34,6 @@ class RecipesServiceImp: RecipesService {
         
         
         return URLSession.shared.dataTaskPublisher(for: url)
-            .print("step:")
             .receive(on: RunLoop.main)
             .map(\.data)
             .decode(type: Recipes.self, decoder: JSONDecoder())

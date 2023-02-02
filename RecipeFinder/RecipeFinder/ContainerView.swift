@@ -17,7 +17,7 @@ struct ContainerView: View {
             if selectedTab == 0 {
                 FoodPairView()
             } else if selectedTab == 1 {
-                SearchView()
+                SearchView(searchVM: SearchViewModelImp())
             } else if selectedTab == 2 {
                 InfoView()
             }
