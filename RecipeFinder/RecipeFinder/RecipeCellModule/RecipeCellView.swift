@@ -13,30 +13,42 @@ struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
     
     var body: some View {
         ZStack {
-            HStack {
-                AsyncImage(
-                    url: viewModel.image,
-                    content: { image in
-                        image.resizable()
-                            .scaledToFit()
-                    }, placeholder: {
-                        Color.white
-                    }
-                )
+            AsyncImage(
+                url: viewModel.image,
+                content: { image in
+                    image.resizable()
+                        .scaledToFit()
+                }, placeholder: {
+                    Color.white
+                }
+            )
+            .frame(width: 150, height: 100)
+            .cornerRadius(10)
+            
+            StrokeText(text: viewModel.title, width: 0.80)
+                .multilineTextAlignment(.center)
+                .font(.headline)
+                .foregroundColor(.white)
                 .frame(width: 150, height: 100)
-                .cornerRadius(5)
-                Spacer()
-                Text("\(viewModel.title)")
-                    .multilineTextAlignment(.trailing)
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .padding(20)
-                    
-            }
+        }        
+    }
+}
 
+struct StrokeText: View {
+    let text: String
+    let width: CGFloat
+    
+    var body: some View {
+        ZStack {
+            ZStack {
+                Text(text).offset(x:  width, y:  width)
+                Text(text).offset(x: -width, y: -width)
+                Text(text).offset(x: -width, y:  width)
+                Text(text).offset(x:  width, y: -width)
+            }
+            .foregroundColor(.black)
+            Text(text)
         }
-        .frame(minWidth: 0 , maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-        
     }
 }
 

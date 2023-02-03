@@ -10,36 +10,58 @@ import SwiftUI
 struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     
     @StateObject var searchVM: ViewModel
-    
-    @State var textInput: String = ""
     @State var isPresented = false
+    
+    private let width = Constants.ScreenSize.width
+    private let height = Constants.ScreenSize.height
     
     var body: some View {
         VStack {
-            Text("Recipe Feed")
+            Text("Search Recipes")
                 .font(.headline)
                 .frame(width: 500, height: 50)
                 .background(.red)
                 .foregroundColor(.white)
-            List(searchVM.recipes) { recipe in
-                let recipeCellVM = RecipeCellViewModelImp(
-                    title: recipe.title,
-                    image: recipe.image
-                )
-                RecipeCellView(viewModel: recipeCellVM)
-                    .padding([.leading], 15)
-                    .padding([.top, .bottom], 2)
-                    .background(Color.red)
-                    .cornerRadius(5)
-                    .listRowSeparator(.hidden)
-                    .onTapGesture {
-                        isPresented = true
+            
+            TextAreaView()
+            RangedSliderView()
+                .frame(width: width - 10)
+            
+            TitlePromptView(title: "Choose meal type:")
+            HStackWrapView(list: ["Breakfast", "Lunch", "Dinner", "Dessert",
+                                "Snack"])
+            
+            TitlePromptView(title: "Choose cuisine type:")
+            HStackWrapView(list: ["Chinese", "Japanese", "Korean", "American", "French", "Italian"])
+            
+            
+            Text("Top Recipes")
+                .font(.headline)
+                .frame(width: 500, height: 30)
+                .foregroundColor(.red)
+            
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(searchVM.recipes) { recipe in
+                        let recipeCellVM = RecipeCellViewModelImp(
+                            title: recipe.title,
+                            image: recipe.image
+                        )
+                        RecipeCellView(viewModel: recipeCellVM)
+                            .padding(5)
+                            .background(Color.red)
+                            .cornerRadius(5)
+                            .listRowSeparator(.hidden)
+                            .onTapGesture {
+                                isPresented = true
+                            }
                     }
+                    .sheet(isPresented: $isPresented, content: {
+                        RecipeView()
+                    })
+                }
+                .padding([.leading, .trailing], 5)
             }
-            .sheet(isPresented: $isPresented, content: {
-                RecipeView()
-            })
-            .listStyle(.plain)
         }
         .onAppear {
             searchVM.fetchRecipes(searchTerms: nil)
@@ -49,7 +71,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        let searchVM = SearchViewModelImp()
+        let searchVM = SearchViewModelSample()
         SearchView(searchVM: searchVM)
     }
 }

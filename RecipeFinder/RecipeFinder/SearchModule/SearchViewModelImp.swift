@@ -46,3 +46,17 @@ class SearchViewModelImp: SearchViewModel {
         })
     }
 }
+
+class SearchViewModelSample: SearchViewModel {
+    @Published var recipes: [Recipe] = []
+    
+    func fetchRecipes(searchTerms: String?) {
+        for i in (0..<10) {
+            recipes.append(Recipe(
+                id: i,
+                title: "Meyer Lemon Ricotta Pancakes with Blackberry Compote",
+                image: "https://spoonacular.com/recipeImages/651765-556x370.jpg")
+            )
+        }
+    }
+}

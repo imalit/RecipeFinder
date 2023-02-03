@@ -17,12 +17,15 @@ struct ContainerView: View {
             if selectedTab == 0 {
                 FoodPairView()
             } else if selectedTab == 1 {
-                SearchView(searchVM: SearchViewModelImp())
+//                SearchView(searchVM: SearchViewModelImp())
+                SearchView(searchVM: SearchViewModelSample())
             } else if selectedTab == 2 {
                 InfoView()
             }
             Spacer()
-        }.safeAreaInset(edge: .bottom) {
+        }
+        .padding([.bottom], 10)
+        .safeAreaInset(edge: .bottom) {
             VStack {
                 CustomTabBarView(selectedIndex: $selectedTab)
                     .foregroundColor(.red)
