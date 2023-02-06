@@ -11,7 +11,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     
     @StateObject var searchVM: ViewModel
     @State var isPresented = false
-    @State var selectedRecipe: Recipe? = nil
+    @State var selectedRecipe: Recipe?
     
     private let width = Constants.ScreenSize.width
     private let height = Constants.ScreenSize.height
