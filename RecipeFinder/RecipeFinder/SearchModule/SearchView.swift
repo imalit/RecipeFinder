@@ -11,6 +11,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     
     @StateObject var searchVM: ViewModel
     @State var isPresented = false
+    @State var selectedRecipe: Recipe? = nil
     
     private let width = Constants.ScreenSize.width
     private let height = Constants.ScreenSize.height
@@ -24,25 +25,38 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
                 .foregroundColor(.white)
             
             TextAreaView()
-            RangedSliderView()
-                .frame(width: width - 10)
+            RangedSliderView(viewModel:
+                RangedSliderViewModelImp(
+                    sliderPosition: 0...15,
+                    sliderBounds: 0...120
+                ), sliderPositionChanged: { _ in }
+            )
+            .padding([.top, .bottom], 20)
             
             TitlePromptView(title: "Choose meal type:")
             HStackWrapView(list: ["Breakfast", "Lunch", "Dinner", "Dessert",
                                 "Snack"])
+            .frame(height: width/10)
             
             TitlePromptView(title: "Choose cuisine type:")
+                .padding(0)
             HStackWrapView(list: ["Chinese", "Japanese", "Korean", "American", "French", "Italian"])
+                .padding([.bottom], 10)
             
-            
-            Text("Top Recipes")
-                .font(.headline)
-                .frame(width: 500, height: 30)
-                .foregroundColor(.red)
+            HStack {
+                Text("Top Recipes")
+                    .font(.headline)
+                    .foregroundColor(.red)
+                Spacer()
+                Text("See all")
+                    .font(.body)
+                    .foregroundColor(.red)
+            }
+            .frame(width: width-20, height: 30)
             
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(searchVM.recipes) { recipe in
+                    ForEach(searchVM.recipesHome) { recipe in
                         let recipeCellVM = RecipeCellViewModelImp(
                             title: recipe.title,
                             image: recipe.image
@@ -53,11 +67,15 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
                             .cornerRadius(5)
                             .listRowSeparator(.hidden)
                             .onTapGesture {
+                                selectedRecipe = recipe
                                 isPresented = true
                             }
                     }
                     .sheet(isPresented: $isPresented, content: {
-                        RecipeView()
+                        if let recipe = selectedRecipe {
+                            let recipePageVM = RecipePageViewModelImp(recipe: recipe)
+                            RecipePageView(viewModel: recipePageVM)
+                        }
                     })
                 }
                 .padding([.leading, .trailing], 5)

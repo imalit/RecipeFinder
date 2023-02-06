@@ -11,6 +11,9 @@ struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
     
     @StateObject var viewModel: ViewModel
     
+    let width = Constants.ScreenSize.width
+    let height = Constants.ScreenSize.height
+    
     var body: some View {
         ZStack {
             AsyncImage(
@@ -22,14 +25,14 @@ struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
                     Color.white
                 }
             )
-            .frame(width: 150, height: 100)
+            .frame(width: width*0.37, height: width*0.25)
             .cornerRadius(10)
             
             StrokeText(text: viewModel.title, width: 0.80)
                 .multilineTextAlignment(.center)
                 .font(.headline)
                 .foregroundColor(.white)
-                .frame(width: 150, height: 100)
+                .frame(width: width*0.37, height: width*0.25)
         }        
     }
 }

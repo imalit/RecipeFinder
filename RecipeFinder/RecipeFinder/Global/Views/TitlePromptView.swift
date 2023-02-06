@@ -18,7 +18,7 @@ struct TitlePromptView: View {
             .font(.headline)
             .frame(
                 width: width - 10,
-                height: 30,
+                height: 25,
                 alignment: .leading
             )
             .foregroundColor(.red)

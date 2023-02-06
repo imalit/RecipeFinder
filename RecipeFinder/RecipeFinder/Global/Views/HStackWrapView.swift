@@ -55,7 +55,7 @@ struct HStackWrapView: View {
 
     func item(for text: String) -> some View {
         Text(text)
-            .padding(.all, 5)
+            .padding([.all], 5)
             .font(.body)
             .background(Color.red)
             .foregroundColor(Color.white)
@@ -69,5 +69,6 @@ struct HStackWrapView: View {
 struct HStackWrapView_Previews: PreviewProvider {
     static var previews: some View {
         HStackWrapView(list: ["Ninetendo", "XBox", "PlayStation", "PlayStation 2", "PlayStation 3", "PlayStation 4"])
+            .previewLayout(.sizeThatFits)
     }
 }
