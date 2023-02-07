@@ -25,13 +25,23 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                 )
                 .frame(width: Constants.ScreenSize.width)
                 
-                StrokeTextView(
-                    text: viewModel.recipe.title ?? "",
-                    width: 0.80
-                )
-                .multilineTextAlignment(.center)
-                .font(.system(size:36, weight: .bold))
-                .foregroundColor(.white)
+                VStack {
+                    StrokeTextView(
+                        text: viewModel.recipe.title ?? "",
+                        width: 0.80
+                    )
+                    .multilineTextAlignment(.center)
+                    .font(.system(size:36, weight: .bold))
+                    .foregroundColor(.white)
+                    
+                    StrokeTextView(
+                        text: "total time: x min",
+                        width: 0.80
+                    )
+                    .multilineTextAlignment(.center)
+                    .font(.system(size:20, weight: .medium))
+                    .foregroundColor(.white)
+                }
             }
             Spacer()
             HStack (spacing: 10){
