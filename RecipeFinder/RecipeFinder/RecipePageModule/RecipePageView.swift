@@ -25,7 +25,7 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                 )
                 .frame(width: Constants.ScreenSize.width)
                 
-                StrokeText(
+                StrokeTextView(
                     text: viewModel.recipe.title ?? "",
                     width: 0.80
                 )

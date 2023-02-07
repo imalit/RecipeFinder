@@ -28,30 +28,12 @@ struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
             .frame(width: width*0.37, height: width*0.25)
             .cornerRadius(10)
             
-            StrokeText(text: viewModel.title, width: 0.80)
+            StrokeTextView(text: viewModel.title, width: 0.80)
                 .multilineTextAlignment(.center)
                 .font(.headline)
                 .foregroundColor(.white)
                 .frame(width: width*0.37, height: width*0.25)
         }        
-    }
-}
-
-struct StrokeText: View {
-    let text: String
-    let width: CGFloat
-    
-    var body: some View {
-        ZStack {
-            ZStack {
-                Text(text).offset(x:  width, y:  width)
-                Text(text).offset(x: -width, y: -width)
-                Text(text).offset(x: -width, y:  width)
-                Text(text).offset(x:  width, y: -width)
-            }
-            .foregroundColor(.black)
-            Text(text)
-        }
     }
 }
 

@@ -32,6 +32,7 @@
 		E0F6A8F4298AE3220001C51D /* RecipePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6A8F3298AE3220001C51D /* RecipePageView.swift */; };
 		E0F6A8F6298AEE270001C51D /* RecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6A8F5298AEE270001C51D /* RecipeService.swift */; };
 		E0F6A8F9298AEE520001C51D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F6A8F8298AEE520001C51D /* Constants.swift */; };
+		E0F729382992EC3D0030E08E /* StrokeTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F729372992EC3D0030E08E /* StrokeTextView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		E0F6A8F3298AE3220001C51D /* RecipePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipePageView.swift; sourceTree = "<group>"; };
 		E0F6A8F5298AEE270001C51D /* RecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeService.swift; sourceTree = "<group>"; };
 		E0F6A8F8298AEE520001C51D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E0F729372992EC3D0030E08E /* StrokeTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +241,7 @@
 				E0008472298D81A6007D6D99 /* TextAreaView.swift */,
 				E0008474298DA042007D6D99 /* HStackWrapView.swift */,
 				E0008476298DA1D5007D6D99 /* TitlePromptView.swift */,
+				E0F729372992EC3D0030E08E /* StrokeTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				E01C75C329917D8E0013759E /* RecipePageViewModel.swift in Sources */,
 				E0008477298DA1D5007D6D99 /* TitlePromptView.swift in Sources */,
 				E0F6A8F9298AEE520001C51D /* Constants.swift in Sources */,
+				E0F729382992EC3D0030E08E /* StrokeTextView.swift in Sources */,
 				E0008473298D81A6007D6D99 /* TextAreaView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
