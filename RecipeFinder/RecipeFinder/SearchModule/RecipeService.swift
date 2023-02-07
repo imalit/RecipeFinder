@@ -14,9 +14,9 @@ struct Recipes: Codable {
 }
 
 struct Recipe: Codable, Identifiable {
-    var id: Int
-    var title: String
-    var image: String
+    var id: Int?
+    var title: String?
+    var image: String?
 }
 
 protocol RecipesService {

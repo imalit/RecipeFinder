@@ -11,12 +11,18 @@ import Combine
 protocol SearchViewModel: ObservableObject {
     var recipesHome: [Recipe] { get set }
     var recipesAll: [Recipe] { get set }
+    var selectedRecipe: Recipe? { get set }
     func fetchRecipes(searchTerms: String?)
+    
+    associatedtype ViewModel: RecipePageViewModel
+    func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
 }
 
 class SearchViewModelImp: SearchViewModel {
     @Published var recipesHome: [Recipe] = []
     @Published var recipesAll: [Recipe] = []
+    
+    var selectedRecipe: Recipe?
     var cancellable: AnyCancellable?
     
     private let numRandomRecipes = 50
@@ -37,7 +43,7 @@ class SearchViewModelImp: SearchViewModel {
             urlString: urlString
         )
         .sink(receiveCompletion: { _ in }, receiveValue: { recipes in
-            var recipeList = recipes.recipes ?? []
+            let recipeList = recipes.recipes ?? []
             var resultsList = recipes.results ?? []
             
             resultsList.append(contentsOf: recipeList)
@@ -53,11 +59,17 @@ class SearchViewModelImp: SearchViewModel {
             }
         })
     }
+    
+    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
+        let viewModel = RecipePageViewModelImp(recipe: recipe)
+        return RecipePageView(viewModel: viewModel)
+    }
 }
 
 class SearchViewModelSample: SearchViewModel {
     @Published var recipesHome: [Recipe] = []
     var recipesAll: [Recipe] = []
+    var selectedRecipe: Recipe?
     
     func fetchRecipes(searchTerms: String?) {
         for i in (0..<10) {
@@ -67,5 +79,10 @@ class SearchViewModelSample: SearchViewModel {
                 image: "https://spoonacular.com/recipeImages/651765-556x370.jpg")
             )
         }
+    }
+    
+    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
+        let viewModel = RecipePageViewModelImp(recipe: recipe)
+        return RecipePageView(viewModel: viewModel)
     }
 }

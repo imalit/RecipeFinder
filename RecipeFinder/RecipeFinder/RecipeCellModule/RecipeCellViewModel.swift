@@ -16,8 +16,11 @@ class RecipeCellViewModelImp: RecipeCellViewModel {
     @Published var title: String = ""
     @Published var image: URL?
     
-    init(title: String, image: String) {
-        self.title = title
-        self.image = URL(string: image)
+    init(title: String?, image: String?) {
+        self.title = title ?? ""
+        
+        if let image = image {
+            self.image = URL(string: image)
+        }
     }
 }

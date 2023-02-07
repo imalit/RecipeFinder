@@ -11,7 +11,6 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     
     @StateObject var searchVM: ViewModel
     @State var isPresented = false
-    @State var selectedRecipe: Recipe?
     
     private let width = Constants.ScreenSize.width
     private let height = Constants.ScreenSize.height
@@ -67,15 +66,18 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
                             .cornerRadius(5)
                             .listRowSeparator(.hidden)
                             .onTapGesture {
-                                selectedRecipe = recipe
+                                searchVM.selectedRecipe = recipe
                                 isPresented = true
                             }
                     }
-                    .sheet(isPresented: $isPresented, content: {
-                        if let recipe = selectedRecipe {
-                            let recipePageVM = RecipePageViewModelImp(recipe: recipe)
-                            RecipePageView(viewModel: recipePageVM)
-                        }
+                    .sheet(
+                        isPresented: $isPresented,
+                        onDismiss: {
+                            isPresented = false
+                        }, content: {
+                            if let recipe = searchVM.selectedRecipe {
+                                searchVM.navigateToRecipe(recipe: recipe)
+                            }
                     })
                 }
                 .padding([.leading, .trailing], 5)

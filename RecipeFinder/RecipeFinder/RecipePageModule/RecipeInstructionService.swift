@@ -18,15 +18,20 @@ struct Step: Codable {
     var step: String
 }
 
-struct Ingredient: Codable {
+struct Ingredient: Codable, Equatable {
     var name: String
+    var id: Int
+    
+    static func ==(lhs: Ingredient, rhs: Ingredient) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 protocol RecipeInstructionService {
     func fetchInstructions(urlString: String) -> AnyPublisher<[Steps], Error>
 }
 
-class RecipeInstructionServiceImp {
+class RecipeInstructionServiceImp: RecipeInstructionService {
     func fetchInstructions(urlString: String) -> AnyPublisher<[Steps], Error> {
         guard let url = URL(string: urlString) else {
             return Just([])
@@ -40,4 +45,6 @@ class RecipeInstructionServiceImp {
             .decode(type: [Steps].self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
+    
+
 }
