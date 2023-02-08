@@ -24,6 +24,9 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                     }
                 )
                 .frame(width: Constants.ScreenSize.width)
+                .mask(
+                    LinearGradient(colors: [.white, .white, .white, .clear], startPoint: .top, endPoint: .bottom)
+                )
                 
                 VStack {
                     StrokeTextView(
@@ -34,35 +37,61 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                     .font(.system(size:36, weight: .bold))
                     .foregroundColor(.white)
                     
-                    StrokeTextView(
-                        text: "total time: x min",
-                        width: 0.80
-                    )
-                    .multilineTextAlignment(.center)
-                    .font(.system(size:20, weight: .medium))
-                    .foregroundColor(.white)
+                    HStack {
+                        Text("total time: \n \(viewModel.totalTime) min")
+                            .lineLimit(2)
+                        
+                        VStack (spacing: 0) {
+                            Text("Servings:")
+                            TextField("2", text: $viewModel.servingDesired)
+                                .multilineTextAlignment(.trailing)
+                        }
+                            
+                        
+                        Toggle(isOn: $viewModel.toggleImperial) {
+                            Text("Imperial Units")
+                                .multilineTextAlignment(.center)
+                        }
+                            
+                    }
+                    .padding([.leading, .trailing])
                 }
             }
-            Spacer()
-            HStack (spacing: 10){
-                VStack {
-                    List(viewModel.ingredients, id: \.id) { ingredient in
-                        Text("\(ingredient.name)")
+            .position(
+                x: Constants.ScreenSize.midX ,
+                y: Constants.ScreenSize.height * 0.15
+            )
+            
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Ingredients")
+                        .font(.system(size: 12, weight: .light))
+                        .padding([.leading])
+                    List(viewModel.ingredients, id: \.self) { ingredient in
+                        Text("\(ingredient)")
                             .foregroundColor(.black)
-                            .font(.system(size: 12, weight: .light))
+                            .font(.system(size: 10, weight: .light))
                     }
                     .listStyle(.plain)
                 }
-                VStack {
+                .frame(width: 140)
+                VStack(alignment: .leading) {
+                    Text("Steps")
+                        .font(.system(size: 16, weight: .regular))
+                        .padding([.leading])
                     List(viewModel.steps, id: \.self) { step in
                         Text("\(step)")
                             .foregroundColor(.black)
+                            .listRowSeparator(.hidden)
                     }
                     .listStyle(.plain)
                     .font(.system(size: 12, weight: .regular))
                 }
+                .padding([.leading], -20)
             }
+            .padding([.top], -100)
         }
+        .padding([.top], 25)
         .onAppear {
             viewModel.fetchInstructions()
         }

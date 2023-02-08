@@ -8,33 +8,57 @@
 import Foundation
 import Combine
 
-struct Steps: Codable {
-    var steps: [Step]
-}
-
-struct Step: Codable {
-    var ingredients: [Ingredient]
-    var number: Int
-    var step: String
+struct DetailedRecipe: Codable {
+    var extendedIngredients: [Ingredient]?
+    var readyInMinutes: Int
+    var servings: Int
+    var analyzedInstructions: [Steps]?
 }
 
 struct Ingredient: Codable, Equatable {
-    var name: String
     var id: Int
+    var originalName: String
+    var measures: Measures?
     
     static func ==(lhs: Ingredient, rhs: Ingredient) -> Bool {
         lhs.id == rhs.id
     }
 }
 
+struct Measures: Codable {
+    var us: Amount?
+    var metric: Amount?
+}
+
+struct Amount: Codable {
+    var amount: Float?
+    var unitShort: String
+}
+
+struct Steps: Codable {
+    var steps: [Step]
+}
+
+struct Step: Codable {
+    var number: Int?
+    var step: String?
+}
+
 protocol RecipeInstructionService {
-    func fetchInstructions(urlString: String) -> AnyPublisher<[Steps], Error>
+    func fetchInstructions(urlString: String) -> AnyPublisher<DetailedRecipe, Error>
 }
 
 class RecipeInstructionServiceImp: RecipeInstructionService {
-    func fetchInstructions(urlString: String) -> AnyPublisher<[Steps], Error> {
+    func fetchInstructions(urlString: String) -> AnyPublisher<DetailedRecipe, Error> {
         guard let url = URL(string: urlString) else {
-            return Just([])
+            let empty = DetailedRecipe(
+                extendedIngredients: [],
+                readyInMinutes: 0,
+                servings: 0,
+                analyzedInstructions: []
+            )
+            
+            return Just(empty)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }
@@ -42,9 +66,7 @@ class RecipeInstructionServiceImp: RecipeInstructionService {
         return URLSession.shared.dataTaskPublisher(for: url)
             .receive(on: RunLoop.main)
             .map(\.data)
-            .decode(type: [Steps].self, decoder: JSONDecoder())
+            .decode(type: DetailedRecipe.self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
     }
-    
-
 }
