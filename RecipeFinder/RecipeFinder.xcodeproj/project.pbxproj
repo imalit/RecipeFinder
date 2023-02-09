@@ -14,6 +14,7 @@
 		E0014D952995572900EA7F35 /* RecipeDataBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0014D942995572900EA7F35 /* RecipeDataBarView.swift */; };
 		E0014D97299557E800EA7F35 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0014D96299557E800EA7F35 /* HeaderView.swift */; };
 		E0014D9929956C6100EA7F35 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0014D9829956C6100EA7F35 /* Protocols.swift */; };
+		E0014D9E2995866C00EA7F35 /* HStackWrapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0014D9D2995866C00EA7F35 /* HStackWrapViewModel.swift */; };
 		E00BF8EF298BFF2C0012602D /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00BF8EE298BFF2C0012602D /* SearchViewModel.swift */; };
 		E00BF8F4298C127C0012602D /* RecipeCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00BF8F3298C127C0012602D /* RecipeCellView.swift */; };
 		E00BF8F6298C12D80012602D /* RecipeCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E00BF8F5298C12D80012602D /* RecipeCellViewModel.swift */; };
@@ -63,6 +64,7 @@
 		E0014D942995572900EA7F35 /* RecipeDataBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDataBarView.swift; sourceTree = "<group>"; };
 		E0014D96299557E800EA7F35 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		E0014D9829956C6100EA7F35 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		E0014D9D2995866C00EA7F35 /* HStackWrapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HStackWrapViewModel.swift; sourceTree = "<group>"; };
 		E00BF8EE298BFF2C0012602D /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		E00BF8F3298C127C0012602D /* RecipeCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCellView.swift; sourceTree = "<group>"; };
 		E00BF8F5298C12D80012602D /* RecipeCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeCellViewModel.swift; sourceTree = "<group>"; };
@@ -123,6 +125,15 @@
 			path = FilterSearchModule;
 			sourceTree = "<group>";
 		};
+		E0014D9C2995865800EA7F35 /* HStackWrapModule */ = {
+			isa = PBXGroup;
+			children = (
+				E0014D9D2995866C00EA7F35 /* HStackWrapViewModel.swift */,
+				E0008474298DA042007D6D99 /* HStackWrapView.swift */,
+			);
+			path = HStackWrapModule;
+			sourceTree = "<group>";
+		};
 		E00BF8F2298C12670012602D /* RecipeCellModule */ = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +175,7 @@
 		E0A48C4529895BC50055B2E2 /* RecipeFinder */ = {
 			isa = PBXGroup;
 			children = (
+				E0014D9C2995865800EA7F35 /* HStackWrapModule */,
 				E01C75BD299166F20013759E /* RangedSliderModule */,
 				E000846D298D6330007D6D99 /* FilterSearchModule */,
 				E00BF8F2298C12670012602D /* RecipeCellModule */,
@@ -245,7 +257,6 @@
 			isa = PBXGroup;
 			children = (
 				E0A48C7129896BEA0055B2E2 /* CustomTabBarView.swift */,
-				E0008474298DA042007D6D99 /* HStackWrapView.swift */,
 				E0008476298DA1D5007D6D99 /* TitlePromptView.swift */,
 				E0F729372992EC3D0030E08E /* StrokeTextView.swift */,
 			);
@@ -415,6 +426,7 @@
 				E00BF8EF298BFF2C0012602D /* SearchViewModel.swift in Sources */,
 				E01C75C1299167390013759E /* RangedSliderViewModel.swift in Sources */,
 				E0A48C4729895BC50055B2E2 /* RecipeFinderApp.swift in Sources */,
+				E0014D9E2995866C00EA7F35 /* HStackWrapViewModel.swift in Sources */,
 				E0014D952995572900EA7F35 /* RecipeDataBarView.swift in Sources */,
 				E01C75C52991800F0013759E /* RecipeInstructionService.swift in Sources */,
 				E01C75BF299166FF0013759E /* RangedSliderView.swift in Sources */,

@@ -7,26 +7,7 @@
 
 import SwiftUI
 
-import SwiftUI
-
-
 //https://stackoverflow.com/a/58876712/5049840
-
-protocol HStackWrapViewModel: ObservableObject {
-    var tapItem: ((String)->Void)? { get set }
-    var list: [String] { get set }
-}
-
-class HStackWrapViewModelImp: HStackWrapViewModel {
-    var tapItem: ((String)->Void)?
-    var list: [String] = []
-    
-    init(list: [String], tapItem: ((String) -> Void)?) {
-        self.tapItem = tapItem
-        self.list = list
-    }
-}
-
 struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
     
     var hStackWrapVM: ViewModel
