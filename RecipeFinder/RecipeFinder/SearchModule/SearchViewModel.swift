@@ -13,7 +13,7 @@ protocol SearchViewModel: ObservableObject {
     var recipesAll: [Recipe] { get set }
     var selectedRecipe: Recipe? { get set }
     var includedIngredients: String { get set }
-    var cuisines: String? { get set }
+    var cuisines: String { get set }
     var time: Int? { get set }
     var type: String? { get set }
     
@@ -24,14 +24,14 @@ protocol SearchViewModel: ObservableObject {
     func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
     
     associatedtype HStackWrapVM: HStackWrapViewModel
-    func getHStackVM(list: [String]) -> HStackWrapVM
+    func getHStackVM(list: [String], isCuisine: Bool) -> HStackWrapVM
 }
 
 class SearchViewModelImp: SearchViewModel {
     @Published var recipesHome: [Recipe] = []
     @Published var recipesAll: [Recipe] = []
     @Published var includedIngredients: String = ""
-    @Published var cuisines: String? = nil
+    @Published var cuisines: String = ""
     @Published var time: Int? = nil
     @Published var type: String? = nil
     
@@ -89,7 +89,7 @@ class SearchViewModelImp: SearchViewModel {
             searchString = "\(searchString)&"
         }
         
-        if let cuisines = cuisines {
+        if !cuisines.isEmpty {
             searchString = "\(searchString)cuisine=\(cuisines)&"
         }
         
@@ -105,11 +105,15 @@ class SearchViewModelImp: SearchViewModel {
         fetchRecipes(searchTerms: searchString)
     }
     
-    func getHStackVM(list: [String]) -> some HStackWrapViewModel {
+    func getHStackVM(list: [String], isCuisine: Bool) -> some HStackWrapViewModel {
         let viewModel = HStackWrapViewModelImp(
             list: list,
             tapItem: { item in
-                self.cuisines = item
+                if isCuisine{
+                    self.cuisines = self.cuisines.isEmpty ? item : "\(self.cuisines), \(item)"
+                } else {
+                    self.type = item
+                }
                 self.formatSearchURL()
             }
         )
