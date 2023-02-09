@@ -9,12 +9,12 @@ import SwiftUI
 
 struct HeaderView<ViewModel>: View where ViewModel: RecipePageViewModel {
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var recipePageVM: ViewModel
     
     var body: some View {
         ZStack {
             AsyncImage(
-                url: URL(string: viewModel.recipe.image ?? ""),
+                url: URL(string: recipePageVM.recipe.image ?? ""),
                 content: { image in
                     image.resizable()
                         .scaledToFill()
@@ -34,7 +34,7 @@ struct HeaderView<ViewModel>: View where ViewModel: RecipePageViewModel {
             GeometryReader { reader in
                 VStack (spacing: 10) {
                     StrokeTextView(
-                        text: viewModel.recipe.title ?? "",
+                        text: recipePageVM.recipe.title ?? "",
                         width: 0.80
                     )
                     .multilineTextAlignment(.center)
@@ -48,7 +48,7 @@ struct HeaderView<ViewModel>: View where ViewModel: RecipePageViewModel {
                         y: reader.frame(in: .local).midY
                     )
                     
-                RecipeDataBarView(viewModel: viewModel)
+                RecipeDataBarView(recipePageVM: recipePageVM)
                     .padding([.leading, .trailing])
                 }
             }
@@ -64,7 +64,7 @@ struct HeaderView_Previews: PreviewProvider {
             image: "https://spoonacular.com/recipeImages/651765-556x370.jpg"
         )
         let viewModel = RecipePageViewModelImp(recipe: recipe)
-        HeaderView(viewModel: viewModel)
+        HeaderView(recipePageVM: viewModel)
             .previewLayout(.sizeThatFits)
     }
 }

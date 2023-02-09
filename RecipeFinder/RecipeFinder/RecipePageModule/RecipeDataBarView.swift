@@ -9,22 +9,22 @@ import SwiftUI
 
 struct RecipeDataBarView<ViewModel>: View where ViewModel: RecipePageViewModel {
     
-    @ObservedObject var viewModel: ViewModel
+    @ObservedObject var recipePageVM: ViewModel
     
     var body: some View {
         HStack {
             HStack (spacing: 5) {
                 Image(systemName: "clock.fill")
-                Text("\(viewModel.totalTime) min")
+                Text("\(recipePageVM.totalTime) min")
             }
             .padding([.trailing], 20)
             
             HStack (spacing: 10) {
                 Image(systemName: "person.3.fill")
-                TextField("\(viewModel.servingDesired)", text: $viewModel.servingDesired)
+                TextField("\(recipePageVM.servingDesired)", text: $recipePageVM.servingDesired)
             }
                 
-            Picker("Select unit of measurement", selection: $viewModel.toggleImperial) {
+            Picker("Select unit of measurement", selection: $recipePageVM.toggleImperial) {
                 Text("Imperial").tag(true)
                 Text("Metric").tag(false)
             }
@@ -43,7 +43,7 @@ struct RecipeDataBarView_Previews: PreviewProvider {
             image: "https://spoonacular.com/recipeImages/651765-556x370.jpg"
         )
         let viewModel = RecipePageViewModelImp(recipe: recipe)
-        RecipeDataBarView(viewModel: viewModel)
+        RecipeDataBarView(recipePageVM: viewModel)
             .previewLayout(.sizeThatFits)
     }
 }

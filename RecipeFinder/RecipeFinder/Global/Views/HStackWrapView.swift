@@ -11,8 +11,25 @@ import SwiftUI
 
 
 //https://stackoverflow.com/a/58876712/5049840
-struct HStackWrapView: View {
-    var list: [String]
+
+protocol HStackWrapViewModel: ObservableObject {
+    var tapItem: ((String)->Void)? { get set }
+    var list: [String] { get set }
+}
+
+class HStackWrapViewModelImp: HStackWrapViewModel {
+    var tapItem: ((String)->Void)?
+    var list: [String] = []
+    
+    init(list: [String], tapItem: ((String) -> Void)?) {
+        self.tapItem = tapItem
+        self.list = list
+    }
+}
+
+struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
+    
+    var hStackWrapVM: ViewModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -25,7 +42,7 @@ struct HStackWrapView: View {
         var height = CGFloat.zero
 
         return ZStack(alignment: .topLeading) {
-            ForEach(self.list, id: \.self) { item in
+            ForEach(self.hStackWrapVM.list, id: \.self) { item in
                 self.item(for: item)
                     .padding([.horizontal, .vertical], 4)
                     .alignmentGuide(.leading, computeValue: { d in
@@ -35,7 +52,7 @@ struct HStackWrapView: View {
                             height -= d.height
                         }
                         let result = width
-                        if item == self.list.last! {
+                        if item == self.hStackWrapVM.list.last! {
                             width = 0 //last item
                         } else {
                             width -= d.width
@@ -44,7 +61,7 @@ struct HStackWrapView: View {
                     })
                     .alignmentGuide(.top, computeValue: {d in
                         let result = height
-                        if item == self.list.last! {
+                        if item == self.hStackWrapVM.list.last! {
                             height = 0 // last item
                         }
                         return result
@@ -61,14 +78,14 @@ struct HStackWrapView: View {
             .foregroundColor(Color.white)
             .cornerRadius(5)
             .onTapGesture {
-                print(text)
+                hStackWrapVM.tapItem?(text)
             }
     }
 }
 
-struct HStackWrapView_Previews: PreviewProvider {
-    static var previews: some View {
-        HStackWrapView(list: ["Ninetendo", "XBox", "PlayStation", "PlayStation 2", "PlayStation 3", "PlayStation 4"])
-            .previewLayout(.sizeThatFits)
-    }
-}
+//struct HStackWrapView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        HStackWrapView(list: ["Ninetendo", "XBox", "PlayStation", "PlayStation 2", "PlayStation 3", "PlayStation 4"])
+//            .previewLayout(.sizeThatFits)
+//    }
+//}

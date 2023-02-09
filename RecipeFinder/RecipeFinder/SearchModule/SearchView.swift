@@ -23,7 +23,7 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
                 .background(.red)
                 .foregroundColor(.white)
             
-            TextAreaView()
+            TextAreaView(viewModel: searchVM)
             RangedSliderView(viewModel:
                 RangedSliderViewModelImp(
                     sliderPosition: 0...15,
@@ -33,13 +33,20 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
             .padding([.top, .bottom], 20)
             
             TitlePromptView(title: "Choose meal type:")
-            HStackWrapView(list: ["Breakfast", "Lunch", "Dinner", "Dessert",
-                                "Snack"])
+            HStackWrapView(
+                hStackWrapVM: searchVM.getHStackVM(
+                    list: ["Main Course", "Dessert", "Snack", "Breakfast"]
+                )
+            )
             .frame(height: width/10)
             
             TitlePromptView(title: "Choose cuisine type:")
                 .padding(0)
-            HStackWrapView(list: ["Chinese", "Japanese", "Korean", "American", "French", "Italian"])
+            HStackWrapView(
+                hStackWrapVM: searchVM.getHStackVM(
+                    list: ["Chinese", "Japanese", "Italian", "Korean", "American", "French"]
+                )
+            )
                 .padding([.bottom], 10)
             
             HStack {
@@ -89,9 +96,9 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
     }
 }
 
-struct SearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        let searchVM = SearchViewModelSample()
-        SearchView(searchVM: searchVM)
-    }
-}
+//struct SearchView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let searchVM = SearchViewModelSample()
+//        SearchView(searchVM: searchVM)
+//    }
+//}

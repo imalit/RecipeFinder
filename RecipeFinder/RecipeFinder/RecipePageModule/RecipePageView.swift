@@ -9,11 +9,11 @@ import SwiftUI
 
 struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
     
-    @StateObject var viewModel: ViewModel
+    @StateObject var recipePageVM: ViewModel
     
     var body: some View {
         VStack {
-            HeaderView(viewModel: viewModel)
+            HeaderView(recipePageVM: recipePageVM)
                 .frame(
                     width: Constants.ScreenSize.width,
                     height: Constants.ScreenSize.height * 0.3
@@ -25,7 +25,7 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                     Text("Ingredients")
                         .font(.system(size: 12, weight: .light))
                         .padding([.leading])
-                    List(viewModel.ingredients, id: \.self) { ingredient in
+                    List(recipePageVM.ingredients, id: \.self) { ingredient in
                         Text("\(ingredient)")
                             .foregroundColor(.black)
                             .font(.system(size: 10, weight: .light))
@@ -37,7 +37,7 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                     Text("Steps")
                         .font(.system(size: 16, weight: .regular))
                         .padding([.leading])
-                    List(viewModel.steps, id: \.self) { step in
+                    List(recipePageVM.steps, id: \.self) { step in
                         Text("\(step)")
                             .foregroundColor(.black)
                             .listRowSeparator(.hidden)
@@ -50,7 +50,7 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
         }
         .padding([.top], 25)
         .onAppear {
-            viewModel.fetchInstructions()
+            recipePageVM.fetchInstructions()
         }
     }
 }
@@ -63,7 +63,7 @@ struct RecipeView_Previews: PreviewProvider {
             image: "https://spoonacular.com/recipeImages/651765-556x370.jpg"
         )
         let viewModel = RecipePageViewModelImp(recipe: recipe)
-        RecipePageView(viewModel: viewModel)
+        RecipePageView(recipePageVM: viewModel)
             .previewLayout(.sizeThatFits)
     }
 }
