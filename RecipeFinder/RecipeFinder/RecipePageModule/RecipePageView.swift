@@ -13,54 +13,12 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
     
     var body: some View {
         VStack {
-            ZStack {
-                AsyncImage(
-                    url: URL(string: viewModel.recipe.image ?? ""),
-                    content: { image in
-                        image.resizable()
-                            .scaledToFit()
-                    }, placeholder: {
-                        Color.white
-                    }
+            HeaderView(viewModel: viewModel)
+                .frame(
+                    width: Constants.ScreenSize.width,
+                    height: Constants.ScreenSize.height * 0.3
                 )
-                .frame(width: Constants.ScreenSize.width)
-                .mask(
-                    LinearGradient(colors: [.white, .white, .white, .clear], startPoint: .top, endPoint: .bottom)
-                )
-                
-                VStack {
-                    StrokeTextView(
-                        text: viewModel.recipe.title ?? "",
-                        width: 0.80
-                    )
-                    .multilineTextAlignment(.center)
-                    .font(.system(size:36, weight: .bold))
-                    .foregroundColor(.white)
-                    
-                    HStack {
-                        Text("total time: \n \(viewModel.totalTime) min")
-                            .lineLimit(2)
-                        
-                        VStack (spacing: 0) {
-                            Text("Servings:")
-                            TextField("2", text: $viewModel.servingDesired)
-                                .multilineTextAlignment(.trailing)
-                        }
-                            
-                        
-                        Toggle(isOn: $viewModel.toggleImperial) {
-                            Text("Imperial Units")
-                                .multilineTextAlignment(.center)
-                        }
-                            
-                    }
-                    .padding([.leading, .trailing])
-                }
-            }
-            .position(
-                x: Constants.ScreenSize.midX ,
-                y: Constants.ScreenSize.height * 0.15
-            )
+                .padding([.bottom], 20)
             
             HStack {
                 VStack(alignment: .leading) {
@@ -89,7 +47,6 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
                 }
                 .padding([.leading], -20)
             }
-            .padding([.top], -100)
         }
         .padding([.top], 25)
         .onAppear {

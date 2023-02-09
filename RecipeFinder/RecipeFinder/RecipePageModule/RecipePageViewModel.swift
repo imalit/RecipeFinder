@@ -45,7 +45,7 @@ class RecipePageViewModelImp: RecipePageViewModel {
                 
                 self.totalTime = recipe.readyInMinutes
                 
-                if let steps = recipe.analyzedInstructions?[0].steps {
+                if let steps = recipe.analyzedInstructions?.first?.steps {
                     for step in steps {
                         var numString = ""
                         if let number = step.number {
@@ -89,6 +89,7 @@ class RecipePageViewModelImp: RecipePageViewModel {
             allIngredients.append("\(String(format: "%g", amount)) \(unit) \(ingredient.originalName)")
         }
         
+        self.servingDesired = String(mealServings)
         self.ingredients = allIngredients
         
         objectWillChange.send()
