@@ -61,6 +61,7 @@ class SearchViewModelImp: SearchViewModel {
             urlString += "?\(searchTerms)&\(Constants.RecipeService.apiKey)"
         }
         
+        print(searchTerms)
         cancellable = RecipesServiceImp().fetchRecipes(
             urlString: urlString
         )
