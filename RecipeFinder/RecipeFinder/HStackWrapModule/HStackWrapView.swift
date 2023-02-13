@@ -10,7 +10,7 @@ import SwiftUI
 //https://stackoverflow.com/a/58876712/5049840
 struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
     
-    var hStackWrapVM: ViewModel
+    @ObservedObject var hStackWrapVM: ViewModel
 
     var body: some View {
         GeometryReader { geometry in
@@ -55,11 +55,11 @@ struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
         Text(text)
             .padding([.all], 5)
             .font(.body)
-            .background(Color.red)
+            .background(hStackWrapVM.switchToggles[text] ?? false ? Color.inactiveRed : Color.red)
             .foregroundColor(Color.white)
             .cornerRadius(5)
             .onTapGesture {
-                hStackWrapVM.tapItem?(text)
+                hStackWrapVM.isItemTapped(item: text)
             }
     }
 }

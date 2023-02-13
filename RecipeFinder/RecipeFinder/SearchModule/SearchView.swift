@@ -33,23 +33,17 @@ struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
             .padding([.top, .bottom], 20)
             
             TitlePromptView(title: "Choose meal type:")
-            HStackWrapView(
-                hStackWrapVM: searchVM.getHStackVM(
-                    list: ["Main Course", "Dessert", "Snack", "Breakfast"],
-                    isCuisine: false
-                )
+            searchVM.displayMealTypeTogglesView(
+                list: ["Main Course", "Dessert", "Snack", "Breakfast"]
             )
             .frame(height: width/10)
             
             TitlePromptView(title: "Choose cuisine type:")
                 .padding(0)
-            HStackWrapView(
-                hStackWrapVM: searchVM.getHStackVM(
-                    list: ["Chinese", "Japanese", "Italian", "Korean", "American", "French"],
-                    isCuisine: true
-                )
+            searchVM.displayCuisineTogglesView(
+                list: ["Chinese", "Japanese", "Italian", "Korean", "American", "French"]
             )
-                .padding([.bottom], 10)
+            .padding([.bottom], 10)
             
             HStack {
                 Text("Top Recipes")

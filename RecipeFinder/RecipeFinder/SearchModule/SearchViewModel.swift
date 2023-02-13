@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 protocol SearchViewModel: ObservableObject {
     var recipesHome: [Recipe] { get set }
@@ -15,7 +16,7 @@ protocol SearchViewModel: ObservableObject {
     var includedIngredients: String { get set }
     var cuisines: String { get set }
     var time: Int? { get set }
-    var type: String? { get set }
+    var type: String { get set }
     
     func fetchRecipes(searchTerms: String?)
     func formatSearchURL()
@@ -23,8 +24,11 @@ protocol SearchViewModel: ObservableObject {
     associatedtype ViewModel: RecipePageViewModel
     func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
     
-    associatedtype HStackWrapVM: HStackWrapViewModel
-    func getHStackVM(list: [String], isCuisine: Bool) -> HStackWrapVM
+    associatedtype CuisineVM: HStackWrapViewModel
+    func displayMealTypeTogglesView(list: [String]) -> HStackWrapView<CuisineVM>
+    
+    associatedtype MealTypeVM: HStackWrapViewModel
+    func displayCuisineTogglesView(list: [String]) -> HStackWrapView<MealTypeVM>
 }
 
 class SearchViewModelImp: SearchViewModel {
@@ -33,12 +37,17 @@ class SearchViewModelImp: SearchViewModel {
     @Published var includedIngredients: String = ""
     @Published var cuisines: String = ""
     @Published var time: Int? = nil
-    @Published var type: String? = nil
+    @Published var type: String = ""
     
     var selectedRecipe: Recipe?
     var cancellable: AnyCancellable?
     
     private let numRandomRecipes = 50
+    
+    private var hasSetCuisineVM = false
+    private var hasSetMealTypeVM = false
+    private var cuisineVM = HStackWrapViewModelImp()
+    private var mealTypeVM = HStackWrapViewModelImp()
     
     func fetchRecipes(searchTerms: String? = nil) {
 
@@ -93,7 +102,7 @@ class SearchViewModelImp: SearchViewModel {
             searchString = "\(searchString)cuisine=\(cuisines)&"
         }
         
-        if let type = type {
+        if !type.isEmpty {
             searchString = "\(searchString)type=\(type)&"
         }
         
@@ -101,24 +110,58 @@ class SearchViewModelImp: SearchViewModel {
             searchString = "\(searchString)maxReadyTime=\(time)&"
         }
         
-        searchString.removeLast() //removing last & character
+        if !searchString.isEmpty {
+            searchString.removeLast() //removing last & character
+        }
+        
+        print("searchString: \(searchString)")
         fetchRecipes(searchTerms: searchString)
     }
     
-    func getHStackVM(list: [String], isCuisine: Bool) -> some HStackWrapViewModel {
+    func displayMealTypeTogglesView(list: [String]) -> HStackWrapView<some HStackWrapViewModel> {
+        if !hasSetMealTypeVM {
+            getHStackVM(list: list, isCuisine: false)
+            hasSetMealTypeVM = true
+        }
+
+        return HStackWrapView(hStackWrapVM: mealTypeVM)
+    }
+    
+    func displayCuisineTogglesView(list: [String]) -> HStackWrapView<some HStackWrapViewModel> {
+        if !hasSetCuisineVM {
+            getHStackVM(list: list, isCuisine: true)
+            hasSetCuisineVM = true
+        }
+        
+        return HStackWrapView(hStackWrapVM: cuisineVM)
+    }
+    
+    private func getHStackVM(list: [String], isCuisine: Bool) {
         let viewModel = HStackWrapViewModelImp(
+            isCuisine: isCuisine,
             list: list,
-            tapItem: { item in
-                if isCuisine{
-                    self.cuisines = self.cuisines.isEmpty ? item : "\(self.cuisines), \(item)"
-                } else {
-                    self.type = item
+            tapItem: { dict in
+                
+                var suffix = ""
+                for (key, value) in dict where value == true {
+                    suffix = suffix.isEmpty ? key : "\(suffix), \(key)"
                 }
+                
+                if isCuisine {
+                    self.cuisines = suffix
+                } else {
+                    self.type = suffix
+                }
+                
                 self.formatSearchURL()
             }
         )
         
-        return viewModel
+        if isCuisine {
+            cuisineVM = viewModel
+        } else {
+            mealTypeVM = viewModel
+        }
     }
 }
 
