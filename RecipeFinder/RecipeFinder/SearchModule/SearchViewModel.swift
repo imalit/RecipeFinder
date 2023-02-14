@@ -33,9 +33,6 @@ protocol SearchViewModel: ObservableObject {
     func fetchRecipes(searchTerms: String?)
     func formatSearchURL()
     
-//    associatedtype ViewModel: RecipePageViewModel
-//    func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
-    
     associatedtype hStackVM: HStackWrapViewModel
     func getHStackVM(isCuisine: Bool, list: [String]) -> hStackVM
 }
@@ -88,11 +85,6 @@ class SearchViewModelImp: SearchViewModel {
             }
         })
     }
-    
-//    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
-//        let viewModel = RecipePageViewModelImp(recipe: recipe)
-//        return RecipePageView(recipePageVM: viewModel)
-//    }
     
     func formatSearchURL() {
         var searchString = ""
@@ -154,32 +146,3 @@ class SearchViewModelImp: SearchViewModel {
         return viewModel
     }
 }
-
-//class SearchViewModelSample: SearchViewModel {
-//    @Published var recipesHome: [Recipe] = []
-//    var recipesAll: [Recipe] = []
-//    var selectedRecipe: Recipe?
-//    var includedIngredients: String?
-//    var cuisines: String?
-//    var time: Int?
-//    var type: String?
-//
-//    func fetchRecipes(searchTerms: String?) {
-//        for i in (0..<10) {
-//            recipesHome.append(Recipe(
-//                id: i,
-//                title: "Meyer Lemon Ricotta Pancakes with Blackberry Compote",
-//                image: "https://spoonacular.com/recipeImages/651765-556x370.jpg")
-//            )
-//        }
-//    }
-//
-//    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
-//        let viewModel = RecipePageViewModelImp(recipe: recipe)
-//        return RecipePageView(recipePageVM: viewModel)
-//    }
-//
-//    func saveText(text: String) { }
-//    func formatSearchURL() { }
-//
-//}
