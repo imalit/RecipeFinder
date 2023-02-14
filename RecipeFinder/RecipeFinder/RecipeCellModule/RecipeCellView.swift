@@ -10,6 +10,7 @@ import SwiftUI
 struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
     
     @StateObject var viewModel: ViewModel
+    @Binding var isTapped: Bool
     
     let width = Constants.ScreenSize.width
     let height = Constants.ScreenSize.height
@@ -33,18 +34,26 @@ struct RecipeCellView<ViewModel>: View where ViewModel: RecipeCellViewModel{
                 .font(.headline)
                 .foregroundColor(.white)
                 .frame(width: width*0.37, height: width*0.25)
-        }        
+        }
+        .padding(5)
+        .background(Color.red)
+        .cornerRadius(5)
+        .listRowSeparator(.hidden)
+        .onTapGesture {
+            viewModel.isTileTapped()
+            isTapped = true
+        }
     }
 }
 
-struct RecipeCellView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = RecipeCellViewModelImp(
-            title: "Meyer Lemon Ricotta Pancakes with Blackberry Compote",
-            image: "https://spoonacular.com/recipeImages/651765-556x370.jpg"
-        )
-        
-        RecipeCellView(viewModel: viewModel)
-            .previewLayout(.sizeThatFits)
-    }
-}
+//struct RecipeCellView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let viewModel = RecipeCellViewModelImp(
+//            title: "Meyer Lemon Ricotta Pancakes with Blackberry Compote",
+//            image: "https://spoonacular.com/recipeImages/651765-556x370.jpg"
+//        )
+//        
+//        RecipeCellView(viewModel: viewModel)
+//            .previewLayout(.sizeThatFits)
+//    }
+//}

@@ -9,6 +9,18 @@ import Foundation
 import Combine
 import SwiftUI
 
+protocol Navigation: ObservableObject {
+    associatedtype ViewModel: RecipePageViewModel
+    func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
+}
+
+class NavigationImp: Navigation {
+    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
+        let viewModel = RecipePageViewModelImp(recipe: recipe)
+        return RecipePageView(recipePageVM: viewModel)
+    }
+}
+
 protocol SearchViewModel: ObservableObject {
     var recipesHome: [Recipe] { get set }
     var recipesAll: [Recipe] { get set }
@@ -21,14 +33,11 @@ protocol SearchViewModel: ObservableObject {
     func fetchRecipes(searchTerms: String?)
     func formatSearchURL()
     
-    associatedtype ViewModel: RecipePageViewModel
-    func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
+//    associatedtype ViewModel: RecipePageViewModel
+//    func navigateToRecipe(recipe: Recipe) -> RecipePageView<ViewModel>
     
-    associatedtype CuisineVM: HStackWrapViewModel
-    func displayMealTypeTogglesView(list: [String]) -> HStackWrapView<CuisineVM>
-    
-    associatedtype MealTypeVM: HStackWrapViewModel
-    func displayCuisineTogglesView(list: [String]) -> HStackWrapView<MealTypeVM>
+    associatedtype hStackVM: HStackWrapViewModel
+    func getHStackVM(isCuisine: Bool, list: [String]) -> hStackVM
 }
 
 class SearchViewModelImp: SearchViewModel {
@@ -44,11 +53,6 @@ class SearchViewModelImp: SearchViewModel {
     
     private let numRandomRecipes = 50
     
-    private var hasSetCuisineVM = false
-    private var hasSetMealTypeVM = false
-    private var cuisineVM = HStackWrapViewModelImp()
-    private var mealTypeVM = HStackWrapViewModelImp()
-    
     func fetchRecipes(searchTerms: String? = nil) {
 
         var urlString = searchTerms == nil ?
@@ -61,7 +65,6 @@ class SearchViewModelImp: SearchViewModel {
             urlString += "?\(searchTerms)&\(Constants.RecipeService.apiKey)"
         }
         
-        print(searchTerms)
         cancellable = RecipesServiceImp().fetchRecipes(
             urlString: urlString
         )
@@ -72,6 +75,9 @@ class SearchViewModelImp: SearchViewModel {
             resultsList.append(contentsOf: recipeList)
             
             var recipesHomeCount = 0
+            self.recipesAll = []
+            self.recipesHome = []
+            
             for recipe in resultsList {
                 self.recipesAll.append(recipe)
                 
@@ -83,10 +89,10 @@ class SearchViewModelImp: SearchViewModel {
         })
     }
     
-    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
-        let viewModel = RecipePageViewModelImp(recipe: recipe)
-        return RecipePageView(recipePageVM: viewModel)
-    }
+//    func navigateToRecipe(recipe: Recipe) -> RecipePageView<some RecipePageViewModel> {
+//        let viewModel = RecipePageViewModelImp(recipe: recipe)
+//        return RecipePageView(recipePageVM: viewModel)
+//    }
     
     func formatSearchURL() {
         var searchString = ""
@@ -115,34 +121,22 @@ class SearchViewModelImp: SearchViewModel {
             searchString.removeLast() //removing last & character
         }
         
-        print("searchString: \(searchString)")
         fetchRecipes(searchTerms: searchString)
     }
     
-    func displayMealTypeTogglesView(list: [String]) -> HStackWrapView<some HStackWrapViewModel> {
-        if !hasSetMealTypeVM {
-            getHStackVM(list: list, isCuisine: false)
-            hasSetMealTypeVM = true
-        }
-
-        return HStackWrapView(hStackWrapVM: mealTypeVM)
-    }
-    
-    func displayCuisineTogglesView(list: [String]) -> HStackWrapView<some HStackWrapViewModel> {
-        if !hasSetCuisineVM {
-            getHStackVM(list: list, isCuisine: true)
-            hasSetCuisineVM = true
+    func getHStackVM(isCuisine: Bool, list: [String]) -> some HStackWrapViewModel {
+        
+        for item in list {
+            if isCuisine {
+                FilterState.updateCuisineFilter(item: item)
+            } else {
+                FilterState.updateMealTypeFilter(item: item)
+            }
         }
         
-        return HStackWrapView(hStackWrapVM: cuisineVM)
-    }
-    
-    private func getHStackVM(list: [String], isCuisine: Bool) {
         let viewModel = HStackWrapViewModelImp(
             isCuisine: isCuisine,
-            list: list,
             tapItem: { dict in
-                
                 var suffix = ""
                 for (key, value) in dict where value == true {
                     suffix = suffix.isEmpty ? key : "\(suffix), \(key)"
@@ -157,12 +151,7 @@ class SearchViewModelImp: SearchViewModel {
                 self.formatSearchURL()
             }
         )
-        
-        if isCuisine {
-            cuisineVM = viewModel
-        } else {
-            mealTypeVM = viewModel
-        }
+        return viewModel
     }
 }
 

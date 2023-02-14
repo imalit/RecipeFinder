@@ -8,8 +8,7 @@
 import SwiftUI
 
 protocol HStackWrapViewModel: ObservableObject {
-    var list: [String] { get set }
-    var switchToggles: [String:Bool] { get set }
+    var switchToggles: [String: Bool] { get set }
     var isCuisine: Bool { get set }
     func isItemTapped(item: String)
 }
@@ -17,17 +16,12 @@ protocol HStackWrapViewModel: ObservableObject {
 class HStackWrapViewModelImp: HStackWrapViewModel {
     @Published var switchToggles: [String:Bool] = [:]
     var tapItem: (([String:Bool])->Void)?
-    var list: [String] = []
     var isCuisine = false
     
-    init(isCuisine: Bool = false, list: [String] = [], tapItem: (([String:Bool]) -> Void)? = nil) {
+    init(isCuisine: Bool = false, tapItem: (([String:Bool]) -> Void)? = nil) {
         self.tapItem = tapItem
-        self.list = list
         self.isCuisine = isCuisine
-        
-        for item in list {
-            switchToggles[item] = false
-        }
+        self.switchToggles = isCuisine ? FilterState.cuisineFilter : FilterState.mealTypeFilter
     }
     
     func isItemTapped(item: String) {
@@ -35,12 +29,15 @@ class HStackWrapViewModelImp: HStackWrapViewModel {
             for (key, _) in switchToggles {
                 if key == item {
                     switchToggles[key]?.toggle()
+                    FilterState.mealTypeFilter[key]?.toggle()
                 } else {
                     switchToggles[key] = false
+                    FilterState.mealTypeFilter[key] = false
                 }
             }
         } else {
             switchToggles[item]?.toggle()
+            FilterState.cuisineFilter[item]?.toggle()
         }
         
         tapItem?(switchToggles)

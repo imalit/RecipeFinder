@@ -7,87 +7,107 @@
 
 import SwiftUI
 
-struct SearchView<ViewModel>: View where ViewModel: SearchViewModel {
+struct SearchView<SearchVM: SearchViewModel, NavigateVM: Navigation>: View {
     
-    @StateObject var searchVM: ViewModel
-    @State var isPresented = false
+    @StateObject var searchVM: SearchVM
+    @StateObject var navigateVM: NavigateVM
+    
+    @State var isRecipePresented = false
+    @State var isViewAllPresented = false
     
     private let width = Constants.ScreenSize.width
     private let height = Constants.ScreenSize.height
     
     var body: some View {
-        VStack {
-            Text("Search Recipes")
-                .font(.headline)
-                .frame(width: 500, height: 50)
-                .background(.red)
-                .foregroundColor(.white)
-            
-            TextAreaView(viewModel: searchVM)
-            RangedSliderView(viewModel:
-                RangedSliderViewModelImp(
-                    sliderPosition: 0...15,
-                    sliderBounds: 0...120
-                ), sliderPositionChanged: { _ in }
-            )
-            .padding([.top, .bottom], 20)
-            
-            TitlePromptView(title: "Choose meal type:")
-            searchVM.displayMealTypeTogglesView(
-                list: ["Main Course", "Dessert", "Snack", "Breakfast"]
-            )
-            .frame(height: width/10)
-            
-            TitlePromptView(title: "Choose cuisine type:")
-                .padding(0)
-            searchVM.displayCuisineTogglesView(
-                list: ["Chinese", "Japanese", "Italian", "Korean", "American", "French"]
-            )
-            .padding([.bottom], 10)
-            
-            HStack {
-                Text("Top Recipes")
+        NavigationStack {
+            VStack {
+                Text("Search Recipes")
                     .font(.headline)
-                    .foregroundColor(.red)
-                Spacer()
-                Text("See all")
-                    .font(.body)
-                    .foregroundColor(.red)
-            }
-            .frame(width: width-20, height: 30)
-            
-            ScrollView(.horizontal) {
+                    .frame(width: 500, height: 50)
+                    .background(.red)
+                    .foregroundColor(.white)
+                
+                TextAreaView(viewModel: searchVM)
+                RangedSliderView(viewModel:
+                    RangedSliderViewModelImp(
+                        sliderPosition: 0...15,
+                        sliderBounds: 0...120
+                    ), sliderPositionChanged: { _ in }
+                )
+                .padding([.top, .bottom], 20)
+                
+                TitlePromptView(title: "Choose meal type:")
+                HStackWrapView(
+                    hStackWrapVM: searchVM.getHStackVM(
+                        isCuisine: false,
+                        list: ["Main Course", "Dessert", "Snack", "Breakfast"]
+                    )
+                )
+                .frame(height: width/10)
+                
+                TitlePromptView(title: "Choose cuisine type:")
+                    .padding(0)
+                HStackWrapView(
+                    hStackWrapVM: searchVM.getHStackVM(
+                        isCuisine: true,
+                        list: ["Chinese", "Japanese", "Italian", "Korean", "American", "French"]
+                    )
+                )
+                .padding([.bottom], 10)
+                
                 HStack {
-                    ForEach(searchVM.recipesHome) { recipe in
-                        let recipeCellVM = RecipeCellViewModelImp(
-                            title: recipe.title,
-                            image: recipe.image
-                        )
-                        RecipeCellView(viewModel: recipeCellVM)
-                            .padding(5)
-                            .background(Color.red)
-                            .cornerRadius(5)
-                            .listRowSeparator(.hidden)
-                            .onTapGesture {
-                                searchVM.selectedRecipe = recipe
-                                isPresented = true
-                            }
+                    Text("Top Recipes")
+                        .font(.headline)
+                        .foregroundColor(.red)
+                    Spacer()
+                    Button("See all") {
+                        self.isViewAllPresented = true
                     }
-                    .sheet(
-                        isPresented: $isPresented,
-                        onDismiss: {
-                            isPresented = false
-                        }, content: {
-                            if let recipe = searchVM.selectedRecipe {
-                                searchVM.navigateToRecipe(recipe: recipe)
+                        .font(.body)
+                        .foregroundColor(.red)
+                        .navigationDestination(
+                            isPresented: $isViewAllPresented,
+                            destination: {
+                                let seeAllVM = SeeAllViewModel(recipes: searchVM.recipesAll)
+                                SeeAllView(
+                                    navigateVM: NavigationImp(),
+                                    seeAllVM: seeAllVM
+                                )
+                                .onDisappear {
+                                    isViewAllPresented = false
+                                }
                             }
-                    })
+                        )
                 }
-                .padding([.leading, .trailing], 5)
+                .frame(width: width-20, height: 30)
+                
+                ScrollView(.horizontal) {
+                    HStack {
+                        ForEach(searchVM.recipesHome) { recipe in
+                            let recipeCellVM = RecipeCellViewModelImp(
+                                recipe: recipe,
+                                isTapped: { recipe in
+                                    searchVM.selectedRecipe = recipe
+                                }
+                            )
+                            RecipeCellView(viewModel: recipeCellVM, isTapped: $isRecipePresented)
+                        }
+                        .sheet(
+                            isPresented: $isRecipePresented,
+                            onDismiss: {
+                                isRecipePresented = false
+                            }, content: {
+                                if let recipe = searchVM.selectedRecipe {
+                                    navigateVM.navigateToRecipe(recipe: recipe)
+                                }
+                        })
+                    }
+                    .padding([.leading, .trailing], 5)
+                }
             }
+            .onAppear {
+                searchVM.fetchRecipes(searchTerms: nil)
         }
-        .onAppear {
-            searchVM.fetchRecipes(searchTerms: nil)
         }
     }
 }

@@ -23,7 +23,8 @@ struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
         var height = CGFloat.zero
 
         return ZStack(alignment: .topLeading) {
-            ForEach(self.hStackWrapVM.list, id: \.self) { item in
+            let list = Array(self.hStackWrapVM.switchToggles.keys)
+            ForEach(list, id: \.self) { item in
                 self.item(for: item)
                     .padding([.horizontal, .vertical], 4)
                     .alignmentGuide(.leading, computeValue: { d in
@@ -33,7 +34,7 @@ struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
                             height -= d.height
                         }
                         let result = width
-                        if item == self.hStackWrapVM.list.last! {
+                        if item == list.last! {
                             width = 0 //last item
                         } else {
                             width -= d.width
@@ -42,7 +43,7 @@ struct HStackWrapView<ViewModel>: View where ViewModel: HStackWrapViewModel {
                     })
                     .alignmentGuide(.top, computeValue: {d in
                         let result = height
-                        if item == self.hStackWrapVM.list.last! {
+                        if item == list.last! {
                             height = 0 // last item
                         }
                         return result
