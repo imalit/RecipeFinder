@@ -139,7 +139,7 @@ class SearchViewModelImp: SearchViewModel {
             tapItem: { dict in
                 var suffix = ""
                 for (key, value) in dict where value == true {
-                    suffix = suffix.isEmpty ? key : "\(suffix), \(key)"
+                    suffix = suffix.isEmpty ? key : "\(suffix),\(key)"
                 }
                 
                 if isCuisine {
