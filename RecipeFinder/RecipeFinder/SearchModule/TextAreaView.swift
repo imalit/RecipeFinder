@@ -23,16 +23,17 @@ struct TextAreaView<ViewModel>: View where ViewModel: SearchViewModel {
             .border(.red)
             .submitLabel(.done)
             .focused($isResponseFocused)
-            .onReceive(viewModel.includedIngredients.publisher.last()) {
-                if ($0 as Character).asciiValue == 10 {
-                    isResponseFocused = false
-                    viewModel.includedIngredients.removeLast()
-                    viewModel.formatSearchURL()
-                } else if ($0 as Character).asciiValue == 44 {
-                    viewModel.formatSearchURL()
+            .onChange(of: viewModel.includedIngredients) { _ in
+                if let last = viewModel.includedIngredients.last {
+                    if last.asciiValue == 10 {
+                        isResponseFocused = false
+                        viewModel.includedIngredients.removeLast()
+                        viewModel.formatSearchURL()
+                    } else if last.asciiValue == 44 {
+                        viewModel.formatSearchURL()
+                    }
                 }
-            }
-            
+            }            
     }
 }
 

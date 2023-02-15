@@ -23,27 +23,29 @@ struct SeeAllView<SeeAllVM: SeeAllViewModel, NavigateVM: Navigation>: View {
     @State var isTapped: Bool = false
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-            ForEach(seeAllVM.recipes) { item in
-                let viewModel = RecipeCellViewModelImp(
-                    recipe: item,
-                    isTapped: { recipe in
-                        seeAllVM.selectedRecipe = recipe
-                    }
-                )
-                RecipeCellView(viewModel: viewModel, isTapped: $isTapped)
-                .padding()
-            }
-        }
-        .sheet(
-            isPresented: $isTapped,
-            onDismiss: {
-                isTapped = false
-            }, content: {
-                if let recipe = seeAllVM.selectedRecipe {
-                    navigateVM.navigateToRecipe(recipe: recipe)
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                ForEach(seeAllVM.recipes) { item in
+                    let viewModel = RecipeCellViewModelImp(
+                        recipe: item,
+                        isTapped: { recipe in
+                            seeAllVM.selectedRecipe = recipe
+                        }
+                    )
+                    RecipeCellView(viewModel: viewModel, isTapped: $isTapped)
+                    .padding()
                 }
-        })
+            }
+            .sheet(
+                isPresented: $isTapped,
+                onDismiss: {
+                    isTapped = false
+                }, content: {
+                    if let recipe = seeAllVM.selectedRecipe {
+                        navigateVM.navigateToRecipe(recipe: recipe)
+                    }
+            })
+        }
     }
 }
 

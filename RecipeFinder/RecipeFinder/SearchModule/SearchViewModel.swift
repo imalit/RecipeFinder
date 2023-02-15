@@ -27,7 +27,7 @@ protocol SearchViewModel: ObservableObject {
     var selectedRecipe: Recipe? { get set }
     var includedIngredients: String { get set }
     var cuisines: String { get set }
-    var time: Int? { get set }
+    var time: Float { get set }
     var type: String { get set }
     
     func fetchRecipes(searchTerms: String?)
@@ -42,7 +42,7 @@ class SearchViewModelImp: SearchViewModel {
     @Published var recipesAll: [Recipe] = []
     @Published var includedIngredients: String = ""
     @Published var cuisines: String = ""
-    @Published var time: Int? = nil
+    @Published var time: Float = 0.0
     @Published var type: String = ""
     
     var selectedRecipe: Recipe?
@@ -90,7 +90,12 @@ class SearchViewModelImp: SearchViewModel {
         var searchString = ""
         
         if !includedIngredients.isEmpty {
-            searchString = "\(searchString)includeIngredients=\(includedIngredients)"
+            let searchTerms = includedIngredients.split(separator: /(, )|,/ )
+            
+            let query = searchTerms.reduce(into: "") { result, char in
+                return result = char == "" ? result : result + "\(char),"
+            }
+            searchString = "\(searchString)includeIngredients=\(query)"
             if searchString.last == "," {
                 searchString.removeLast()
             }
@@ -105,8 +110,8 @@ class SearchViewModelImp: SearchViewModel {
             searchString = "\(searchString)type=\(type)&"
         }
         
-        if let time = time {
-            searchString = "\(searchString)maxReadyTime=\(time)&"
+        if time >= 5 {
+            searchString = "\(searchString)maxReadyTime=\(Int(time))&"
         }
         
         if !searchString.isEmpty {

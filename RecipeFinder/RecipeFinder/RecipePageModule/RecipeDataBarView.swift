@@ -10,6 +10,7 @@ import SwiftUI
 struct RecipeDataBarView<ViewModel>: View where ViewModel: RecipePageViewModel {
     
     @ObservedObject var recipePageVM: ViewModel
+    @FocusState private var isTextFieldFocused: Bool
     
     var body: some View {
         HStack {
@@ -21,12 +22,24 @@ struct RecipeDataBarView<ViewModel>: View where ViewModel: RecipePageViewModel {
             
             HStack (spacing: 10) {
                 Image(systemName: "person.3.fill")
-                TextField("\(recipePageVM.servingDesired)", text: $recipePageVM.servingDesired)
+                TextField(
+                    "\(recipePageVM.servingDesired)",
+                    text: $recipePageVM.servingDesired
+                )
+                .focused($isTextFieldFocused)
+                .onChange(of: isTextFieldFocused) { isFocused in
+                    if !isFocused {
+                        recipePageVM.formatIngredients()
+                    }
+                }
             }
                 
             Picker("Select unit of measurement", selection: $recipePageVM.toggleImperial) {
                 Text("Imperial").tag(true)
                 Text("Metric").tag(false)
+            }
+            .onChange(of: recipePageVM.toggleImperial) { _ in
+                recipePageVM.formatIngredients()
             }
             .pickerStyle(.segmented)
             .padding([.leading], -30)

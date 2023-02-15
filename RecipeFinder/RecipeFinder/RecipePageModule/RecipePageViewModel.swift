@@ -16,6 +16,7 @@ protocol RecipePageViewModel: ObservableObject {
     var servingDesired: String { get set }
     var totalTime: Int { get set }
     func fetchInstructions()
+    func formatIngredients()
 }
 
 class RecipePageViewModelImp: RecipePageViewModel {
@@ -27,6 +28,8 @@ class RecipePageViewModelImp: RecipePageViewModel {
     var recipe: Recipe
     
     private var anyCancellable: AnyCancellable?
+    private var originalIngredients: [Ingredient] = []
+    private var originalServings: Int = 0
     
     init(recipe: Recipe) {
         self.recipe = recipe
@@ -59,27 +62,27 @@ class RecipePageViewModelImp: RecipePageViewModel {
                 self.steps = allSteps
                 
                 if let extendedIngredients = recipe.extendedIngredients {
-                    self.formatIngredients(
-                        ingredients: extendedIngredients,
-                        mealServings: recipe.servings
-                    )
+                    self.originalIngredients = extendedIngredients
+                    self.originalServings = recipe.servings
+                    self.servingDesired = String(self.originalServings)
+                    self.formatIngredients()
                 }
             }
         )
     }
     
-    private func formatIngredients(ingredients: [Ingredient], mealServings: Int) {
+    func formatIngredients() {
         var unit = ""
         var ratio: Float = 1.0
         var amount: Float = 0.0
         var allIngredients: [String] = []
-        for ingredient in ingredients {
+        for ingredient in originalIngredients {
             unit = toggleImperial ?
             ingredient.measures?.us?.unitShort ?? "" :
             ingredient.measures?.metric?.unitShort ?? ""
             
             if let servingDesired = Float(servingDesired) {
-                ratio = servingDesired/Float(mealServings)
+                ratio = servingDesired/Float(originalServings)
             }
             
             amount = Float(toggleImperial ?
@@ -89,7 +92,6 @@ class RecipePageViewModelImp: RecipePageViewModel {
             allIngredients.append("\(String(format: "%g", amount)) \(unit) \(ingredient.originalName)")
         }
         
-        self.servingDesired = String(mealServings)
         self.ingredients = allIngredients
         
         objectWillChange.send()

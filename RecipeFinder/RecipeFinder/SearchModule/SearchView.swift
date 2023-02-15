@@ -28,13 +28,19 @@ struct SearchView<SearchVM: SearchViewModel, NavigateVM: Navigation>: View {
                     .foregroundColor(.white)
                 
                 TextAreaView(viewModel: searchVM)
-                RangedSliderView(viewModel:
-                    RangedSliderViewModelImp(
-                        sliderPosition: 0...15,
-                        sliderBounds: 0...120
-                    ), sliderPositionChanged: { _ in }
-                )
-                .padding([.top, .bottom], 20)
+
+                VStack {
+                    Slider(value: $searchVM.time, in: 0...180, step: 5) { isEditing in
+                        if !isEditing {
+                            searchVM.formatSearchURL()
+                        }
+                    }
+                        .accentColor(Color.red)
+                    Text("Max Time: \(searchVM.time, specifier: "%0.f") min")
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                }
+                .padding([.horizontal], 20)
                 
                 TitlePromptView(title: "Choose meal type:")
                 HStackWrapView(
