@@ -106,14 +106,16 @@ struct SearchView<SearchVM: SearchViewModel, NavigateVM: Navigation>: View {
                                 if let recipe = searchVM.selectedRecipe {
                                     navigateVM.navigateToRecipe(recipe: recipe)
                                 }
-                        })
+                            }
+                        )
                     }
                     .padding([.leading, .trailing], 5)
                 }
             }
+            .ignoresSafeArea(.keyboard, edges: .bottom)
             .onAppear {
                 searchVM.fetchRecipes(searchTerms: nil)
-        }
+            }
         }
     }
 }

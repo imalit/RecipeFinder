@@ -12,17 +12,18 @@ struct ContainerView: View {
     @State private var selectedTab = 1
     
     var body: some View {
-        
-        VStack {
-            if selectedTab == 0 {
-                FoodPairView()
-            } else if selectedTab == 1 {
-                SearchView(searchVM: SearchViewModelImp(), navigateVM: NavigationImp())
-//                SearchView(searchVM: SearchViewModelSample())
-            } else if selectedTab == 2 {
-                InfoView()
+        GeometryReader { _ in
+            VStack {
+                if selectedTab == 0 {
+                    FoodPairView()
+                } else if selectedTab == 1 {
+                    SearchView(searchVM: SearchViewModelImp(), navigateVM: NavigationImp())
+                    //                SearchView(searchVM: SearchViewModelSample())
+                } else if selectedTab == 2 {
+                    InfoView()
+                }
+                Spacer()
             }
-            Spacer()
         }
         .padding([.bottom], 10)
         .safeAreaInset(edge: .bottom) {
@@ -34,6 +35,7 @@ struct ContainerView: View {
                     .background(.red)
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 
