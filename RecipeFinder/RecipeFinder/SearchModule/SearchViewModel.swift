@@ -30,8 +30,8 @@ protocol SearchViewModel: ObservableObject {
     var time: Float { get set }
     var type: String { get set }
     
-    func fetchRecipes(searchTerms: String?)
-    func formatSearchURL()
+    func fetchRecipes(urlString: String, recipesService: RecipesService?)
+    func formatSearchURL() -> String
     
     associatedtype hStackVM: HStackWrapViewModel
     func getHStackVM(isCuisine: Bool, list: [String]) -> hStackVM
@@ -50,19 +50,14 @@ class SearchViewModelImp: SearchViewModel {
     
     private let numRandomRecipes = 50
     
-    func fetchRecipes(searchTerms: String? = nil) {
-
-        var urlString = searchTerms == nil ?
-            Constants.RecipeService.random :
-            Constants.RecipeService.complex
+    func fetchRecipes(urlString: String, recipesService: RecipesService?) {
         
-        if searchTerms == nil {
-            urlString += "?number=\(numRandomRecipes)&\(Constants.RecipeService.apiKey)"
-        } else if let searchTerms = searchTerms {
-            urlString += "?\(searchTerms)&\(Constants.RecipeService.apiKey)"
+        var recipeService: RecipesService = RecipesServiceImp()
+        if let recipesService = recipesService {
+            recipeService = recipesService
         }
         
-        cancellable = RecipesServiceImp().fetchRecipes(
+        cancellable = recipeService.fetchRecipes(
             urlString: urlString
         )
         .sink(receiveCompletion: { _ in }, receiveValue: { recipes in
@@ -86,7 +81,7 @@ class SearchViewModelImp: SearchViewModel {
         })
     }
     
-    func formatSearchURL() {
+    func formatSearchURL() -> String {
         var searchString = ""
         
         if !includedIngredients.isEmpty {
@@ -118,7 +113,17 @@ class SearchViewModelImp: SearchViewModel {
             searchString.removeLast() //removing last & character
         }
         
-        fetchRecipes(searchTerms: searchString)
+        var urlString = searchString.isEmpty ?
+            Constants.RecipeService.random :
+            Constants.RecipeService.complex
+        
+        if searchString.isEmpty {
+            urlString += "?number=\(numRandomRecipes)&\(Constants.RecipeService.apiKey)"
+        } else {
+            urlString += "?\(searchString)&\(Constants.RecipeService.apiKey)"
+        }
+        
+        return urlString
     }
     
     func getHStackVM(isCuisine: Bool, list: [String]) -> some HStackWrapViewModel {
@@ -133,19 +138,22 @@ class SearchViewModelImp: SearchViewModel {
         
         let viewModel = HStackWrapViewModelImp(
             isCuisine: isCuisine,
-            tapItem: { dict in
+            tapItem: { [weak self] dict in
                 var suffix = ""
                 for (key, value) in dict where value == true {
                     suffix = suffix.isEmpty ? key : "\(suffix),\(key)"
                 }
                 
                 if isCuisine {
-                    self.cuisines = suffix
+                    self?.cuisines = suffix
                 } else {
-                    self.type = suffix
+                    self?.type = suffix
                 }
                 
-                self.formatSearchURL()
+                self?.fetchRecipes(
+                    urlString: self?.formatSearchURL() ?? "",
+                    recipesService: nil
+                )
             }
         )
         return viewModel

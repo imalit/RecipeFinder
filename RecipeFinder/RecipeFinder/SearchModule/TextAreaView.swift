@@ -28,9 +28,15 @@ struct TextAreaView<ViewModel>: View where ViewModel: SearchViewModel {
                     if last.asciiValue == 10 {
                         isResponseFocused = false
                         viewModel.includedIngredients.removeLast()
-                        viewModel.formatSearchURL()
+                        viewModel.fetchRecipes(
+                            urlString: viewModel.formatSearchURL(),
+                            recipesService: nil
+                        )
                     } else if last.asciiValue == 44 {
-                        viewModel.formatSearchURL()
+                        viewModel.fetchRecipes(
+                            urlString: viewModel.formatSearchURL(),
+                            recipesService: nil
+                        )
                     }
                 }
             }            

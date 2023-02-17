@@ -32,7 +32,10 @@ struct SearchView<SearchVM: SearchViewModel, NavigateVM: Navigation>: View {
                 VStack {
                     Slider(value: $searchVM.time, in: 0...180, step: 5) { isEditing in
                         if !isEditing {
-                            searchVM.formatSearchURL()
+                            searchVM.fetchRecipes(
+                                urlString: searchVM.formatSearchURL(),
+                                recipesService: nil
+                            )
                         }
                     }
                         .accentColor(Color.red)
@@ -114,7 +117,10 @@ struct SearchView<SearchVM: SearchViewModel, NavigateVM: Navigation>: View {
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .onAppear {
-                searchVM.fetchRecipes(searchTerms: nil)
+                searchVM.fetchRecipes(
+                    urlString: searchVM.formatSearchURL(),
+                    recipesService: nil
+                )
             }
         }
     }

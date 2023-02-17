@@ -15,15 +15,16 @@ protocol RecipePageViewModel: ObservableObject {
     var toggleImperial: Bool { get set }
     var servingDesired: String { get set }
     var totalTime: Int { get set }
-    func fetchInstructions()
+    func fetchInstructions(urlString: String?, instructionService: RecipeInstructionService?)
     func formatIngredients()
+    func setUrlString() -> String?
 }
 
 class RecipePageViewModelImp: RecipePageViewModel {
     var ingredients: [String] = []
     var steps: [String] = []
     @Published var toggleImperial: Bool = false
-    @Published var servingDesired: String = ""
+    var servingDesired: String = ""
     var totalTime: Int = 0
     var recipe: Recipe
     
@@ -35,14 +36,23 @@ class RecipePageViewModelImp: RecipePageViewModel {
         self.recipe = recipe
     }
     
-    func fetchInstructions() {
-        guard let id = recipe.id else { return }
+    func setUrlString() -> String? {
+        guard let id = recipe.id else { return nil }
+        return Constants.RecipeService.information(id: id)
+    }
+    
+    func fetchInstructions(urlString: String?, instructionService: RecipeInstructionService?) {
+        guard let urlString else { return }
         
-        let urlString = Constants.RecipeService.information(id: id)
-
+        var service: RecipeInstructionService = RecipeInstructionServiceImp()
+        
+        if let instructionService = instructionService {
+            service = instructionService
+        }
+        
         var allSteps: [String] = []
         
-        anyCancellable = RecipeInstructionServiceImp()
+        anyCancellable = service
             .fetchInstructions(urlString: urlString)
             .sink(receiveCompletion: { _ in }, receiveValue: { recipe in
                 

@@ -50,7 +50,10 @@ struct RecipePageView<ViewModel>: View where ViewModel: RecipePageViewModel {
         }
         .padding([.top], 25)
         .onAppear {
-            recipePageVM.fetchInstructions()
+            recipePageVM.fetchInstructions(
+                urlString: recipePageVM.setUrlString(),
+                instructionService: RecipeInstructionServiceImp()
+            )
         }
     }
 }
